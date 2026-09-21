@@ -1,0 +1,11 @@
+#!/usr/bin/env bash
+# pre-commit - refuse a commit that stages a credential or a private detail.
+#
+# Enable it once per clone:   git config core.hooksPath .githooks
+#
+# PYTHONDONTWRITEBYTECODE keeps a __pycache__ directory from appearing beside
+# the scanner and turning up as an untracked stray in a later working tree.
+set -euo pipefail
+
+repo_root=$(git rev-parse --show-toplevel)
+exec env PYTHONDONTWRITEBYTECODE=1 python3 "$repo_root/scripts/secret-scan.py"
