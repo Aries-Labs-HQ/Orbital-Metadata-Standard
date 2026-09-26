@@ -1,6 +1,6 @@
 # Orbital Metadata — a proposal for Alkanes collections (draft v0.1, Sep 21 2026)
 
-**Author: Aries Labs. Worked example: Aries Orbitals. Status: PROPOSAL — never a decree.** Publication gate: this document publishes when Aries Orbitals itself conforms, as measured by OZ-SCHEMA-1's re-proof. Until then it is an internal draft. It states plainly what our own implementation does not yet do.
+**Author: Aries Labs. Worked example: Aries Orbitals. Status: DRAFT v0.1, PUBLIC PROPOSAL — never a decree.** The document was written from the Aries Orbitals contract as shipped, which is therefore its reference implementation. The DRAFT label comes off when §1, §3 and `examples/` are measured from that collection's mainnet parent rather than typed. It states plainly what our own implementation does not yet do (§9).
 
 ## 0 · Why this exists
 
@@ -15,7 +15,7 @@ Three live Alkanes collections answer the same attributes opcode with three inco
 5. **Traits do not exist before the mint.** A piece's traits are seeded by the transaction that mints it; the contract refuses to describe an unminted index. Rarity cannot be enumerated in advance.
 6. **No dead weight.** A view that is derivable from another view, or a field that is single-valued forever, is not part of the surface.
 
-## 3 · The parent views (Aries Orbitals as shipped after OZ-SCHEMA-1)
+## 3 · The parent views (Aries Orbitals as shipped — re-derivation from the certified source owed)
 
 | opcode | name | returns | role |
 |---|---|---|---|
@@ -24,7 +24,6 @@ Three live Alkanes collections answer the same attributes opcode with three inco
 | 101 | get-total-supply | u128 | pieces issued |
 | 102 | get-cap | u128 | hard cap, immutable |
 | 1000 | get-data(index) | svg | the image, rendered in-contract |
-| 1001 | get-content-type | string | `image/svg+xml` |
 | 1002 | get-attributes(index) | json | the attributes array (§5) |
 | 1005 | minter-record(spk) | json | per-address count and cap — **the pre-flight** |
 | 1006 | paid-of(index) | u128 | sats paid to the treasury for this piece |
@@ -34,6 +33,8 @@ Three live Alkanes collections answer the same attributes opcode with three inco
 | 1011 | index-of(block, tx) | json | child alkane id → index; **the membership oracle** |
 | 1012 | piece-of-txid(txid) | json | mint transaction → piece |
 | 1013 | standards | json | the machine-readable token model (§7) |
+
+**Measured Sep 25 against the certified bytecode:** the parent answers **16** opcodes; this table lists 15 and one of them is wrong — `1001` (content type) is a **child** view, not a parent view; the parent's `1000` takes an index and reverts without one. The table is replaced by the measured list in v0.2; until then it is descriptive.
 
 **Removed by ruling, Sep 21:** 103, 104 (derived from 101/102), 1003 (a subset of 1008 with an empty `traits` field), 1004 (single-class histogram). An Orbital implementing this proposal should not carry views whose answers are derivable from others.
 
@@ -88,7 +89,7 @@ The contract describes its own token model: `piece_supply: 1`, `piece_divisible:
 
 ## 9 · What Aries Orbitals does not yet do (honesty section)
 
-- The minimum donation is an initialize parameter with no view that reads it back; readers infer it from refusals.
+- The minimum donation is readable (`supply.mint.floor_sats`, opcode 1007), but the parent has no zero-argument image view: `1000` requires an index, so an explorer that asks the parent for a collection image with no argument gets a revert. Children answer `1000` and `1001` normally. A collection-level image view is an open question for v0.2 (see proposals/).
 - The per-address cap is per scriptPubKey; a wallet rotating addresses is uncapped. Public copy says "3 per wallet address."
 - `permanent_id` is defined here and emitted by no contract yet.
 - Section 1's survey is not yet inlined.
