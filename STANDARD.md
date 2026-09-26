@@ -34,7 +34,7 @@ Three live Alkanes collections answer the same attributes opcode with three inco
 | 1012 | piece-of-txid(txid) | json | mint transaction → piece |
 | 1013 | standards | json | the machine-readable token model (§7) |
 
-**Measured Sep 25 against the certified bytecode:** the parent answers **16** opcodes; this table lists 15 and one of them is wrong — `1001` (content type) is a **child** view, not a parent view; the parent's `1000` takes an index and reverts without one. The table is replaced by the measured list in v0.2; until then it is descriptive.
+**Measured Sep 25 against the certified bytecode:** the parent answers **16** opcodes; this table listed 15 before the `1001` row was removed (content type is a **child** view, not a parent view), so at least two parent views are missing from it; the parent's `1000` takes an index and reverts without one. The table is replaced by the measured list in v0.2; until then it is descriptive.
 
 **Removed by ruling, Sep 21:** 103, 104 (derived from 101/102), 1003 (a subset of 1008 with an empty `traits` field), 1004 (single-class histogram). An Orbital implementing this proposal should not carry views whose answers are derivable from others.
 
