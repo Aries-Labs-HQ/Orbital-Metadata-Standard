@@ -1,0 +1,62 @@
+{
+  "name": "Aries Orbital #0007",
+  "description": "One of 3,000 Aries Orbitals — generative art rendered in-contract on Bitcoin via Alkanes, seeded by its own mint transaction, with image, traits and provenance read from the chain itself. The first exhibition collection on Open Orbit.",
+  "image_data": "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 640 640\" width=\"640\" height=\"640\"><defs><path id=\"R\" fill-rule=\"evenodd\" d=\"M123 148L70 227L72 365L146 437L207 437L211 433L222 415L222 409L199 375L183 375L167 385L161 385L117 342L117 274L169 223L175 222L204 263L211 269L212 275L138 275L137 280L181 332L229 332L231 334L279 497L286 506L318 533L325 531L362 498L411 333L460 332L503 278L503 276L428 275L467 220L469 220L526 274L526 341L480 387L462 381L439 381L419 411L431 433L434 436L495 436L570 363L570 226L518 148L403 149L323 242L320 242L313 234L240 148Z\"/></defs><rect width=\"640\" height=\"640\" fill=\"#050b05\"/><use href=\"#R\" fill=\"none\" stroke=\"#33ff66\" stroke-width=\"2.5\"/><g stroke=\"#ffffff\" stroke-width=\"2\"><rect x=\"259\" y=\"336\" width=\"52\" height=\"30\" fill=\"#e8232f\" opacity=\"0.85\"/><rect x=\"330\" y=\"336\" width=\"52\" height=\"30\" fill=\"#1fc3e8\" opacity=\"0.85\"/><path d=\"M311 348H330M259 348H229M382 348H412\" fill=\"none\"/></g><path d=\"M341 507L380 517L341 511Z\" fill=\"#a8763e\"/><path d=\"M343 510L380 517\" stroke=\"#6e4a26\" stroke-width=\"1\" fill=\"none\"/><g font-family=\"monospace\" font-size=\"9\"><text x=\"10\" y=\"16\" fill=\"#33ff66\">ARIES ORBITALS</text><text x=\"10\" y=\"27\" fill=\"#33ff66\">0007/3000</text><text x=\"630\" y=\"16\" text-anchor=\"end\" fill=\"#1a7a35\">PAL P1 PHOSPHOR GREEN</text><text x=\"630\" y=\"27\" text-anchor=\"end\" fill=\"#1a7a35\">ACC TOOTHPICK</text><text x=\"630\" y=\"38\" text-anchor=\"end\" fill=\"#1a7a35\">EYE 3D SHADES</text><text x=\"10\" y=\"38\" fill=\"#1a7a35\">RAM WIREFRAME</text><text x=\"10\" y=\"595\" fill=\"#1a7a35\">HED NO HEADWEAR</text><text x=\"10\" y=\"606\" fill=\"#1a7a35\">FRM FRAMELESS</text><text x=\"10\" y=\"617\" fill=\"#1a7a35\">SIG CLEAR SIGNAL</text><text x=\"630\" y=\"617\" text-anchor=\"end\" fill=\"#1a7a35\">0x7abd81c39cfa679b</text><text x=\"630\" y=\"628\" text-anchor=\"end\" fill=\"#1a7a35\">d90f18d32d2d8bf8</text></g></svg>",
+  "content_type": "image/svg+xml",
+  "attributes": [
+    {
+      "id": "palette",
+      "trait_type": "Palette",
+      "value": "P1 Phosphor Green"
+    },
+    {
+      "id": "ram_render",
+      "trait_type": "Ram Render",
+      "value": "Wireframe"
+    },
+    {
+      "id": "eyes",
+      "trait_type": "Eyes",
+      "value": "3D Shades"
+    },
+    {
+      "id": "headwear",
+      "trait_type": "Headwear",
+      "value": "No Headwear"
+    },
+    {
+      "id": "accessory",
+      "trait_type": "Accessory",
+      "value": "Toothpick"
+    },
+    {
+      "id": "frame",
+      "trait_type": "Frame",
+      "value": "Frameless"
+    },
+    {
+      "id": "signal",
+      "trait_type": "Signal",
+      "value": "Clear Signal"
+    }
+  ],
+  "number": 7,
+  "index": 6,
+  "instance": {
+    "id": "2:98825",
+    "block": 2,
+    "tx": 98825
+  },
+  "origin": {
+    "height": 969199,
+    "txid": "6a065292adb7d52708de61e418587eb2a3a068a819a77bc1448dc857f61bfc37",
+    "seed": "0x7abd81c39cfa679bd90f18d32d2d8bf8"
+  },
+  "provenance": {
+    "identity": "5120f9586df49f798a682100f0f73b4de8f672d38d1a87cea9a6993c7752093068d8",
+    "paid_sats": 3000
+  },
+  "renderer": "in_contract",
+  "art_version": "v9h-3000",
+  "permanent_id": null
+}
