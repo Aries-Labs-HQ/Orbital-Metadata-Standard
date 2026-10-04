@@ -9,11 +9,11 @@ Nothing in this directory was typed. Every value was read from Bitcoin mainnet a
 | network | Bitcoin mainnet |
 | reader | SUBFROST gateway, `https://mainnet.subfrost.io/v4/jsonrpc`, **anonymous tier** (no key; 20 calls/min) |
 | method | `alkanes_simulate [{target:{block,tx}, inputs:[opcode, args…]}, "latest"]`; `metashrew_height` for heights |
-| heights | 969,800–969,801 (`metashrew_height` read before and after each batch) |
-| date | 2026-10-04, 05:07–05:14 UTC |
+| heights | 969,800–969,896 (`metashrew_height` read before and after each batch) |
+| date | 2026-10-04, 05:07–20:38 UTC |
 | pacing | ≥ 3.1 s between calls |
-| gateway calls | **76** in total, every one logged (method, params, raw response) |
-| subjects | parent `2:98433`; children #0007 `2:98825` and #3000 `2:102171` |
+| gateway calls | **114** in total, every one logged (method, params, raw response) |
+| subjects | `examples/`: parent `2:98433`; children #0007 `2:98825` and #3000 `2:102171`. §1 survey: Alkane Pandas `2:614` (`2:615`, `2:616`), Oyly `2:10672` (`2:15635`, `2:15636`) |
 
 ## The limitation that cannot be removed today
 
@@ -38,7 +38,7 @@ Mainnet has **one** Alkanes reader, so these answers were not cross-checked agai
 
 ## The calls
 
-In order. `n` is the call's number in the run's ledger.
+In order. `n` is the call's number in the run's ledger. Calls 1–76 measured §3, §7 and the files above; calls 77 onward measured the §1 survey.
 
 | n | UTC | method | target | inputs | verdict |
 |---|---|---|---|---|---|
@@ -118,3 +118,41 @@ In order. `n` is the call's number in the run's ledger.
 | 74 | 05:14:32 | `alkanes_simulate` | `2:98433` | `12, 0, 0, 0, 0` | REVERT: `Unrecognized opcode` |
 | 75 | 05:14:36 | `alkanes_simulate` | `2:98433` | `1000, 0, 0, 0, 0` | DATA, 2,776 B |
 | 76 | 05:14:40 | `metashrew_height` | — | — | 969801 |
+| 77 | 20:36:01 | `metashrew_height` | — | — | 969896 |
+| 78 | 20:36:04 | `alkanes_simulate` | `2:614` | `99` | DATA, 13 B |
+| 79 | 20:36:08 | `alkanes_simulate` | `2:614` | `101` | DATA, 16 B |
+| 80 | 20:36:11 | `alkanes_simulate` | `2:614` | `1002, 0` | DATA, 5 B |
+| 81 | 20:36:15 | `alkanes_simulate` | `2:614` | `1002, 1` | DATA, 5 B |
+| 82 | 20:36:19 | `alkanes_simulate` | `2:615` | `99` | DATA, 16 B |
+| 83 | 20:36:22 | `alkanes_simulate` | `2:615` | `998` | DATA, 5 B |
+| 84 | 20:36:26 | `alkanes_simulate` | `2:615` | `999` | DATA, 32 B |
+| 85 | 20:36:29 | `alkanes_simulate` | `2:615` | `1002` | DATA, 112 B |
+| 86 | 20:36:34 | `metashrew_height` | — | — | 969896 |
+| 87 | 20:36:39 | `metashrew_height` | — | — | 969896 |
+| 88 | 20:36:42 | `alkanes_simulate` | `2:616` | `99` | DATA, 16 B |
+| 89 | 20:36:46 | `alkanes_simulate` | `2:616` | `998` | DATA, 5 B |
+| 90 | 20:36:49 | `alkanes_simulate` | `2:616` | `1002` | DATA, 106 B |
+| 91 | 20:36:54 | `alkanes_simulate` | `2:15635` | `99` | DATA, 10 B |
+| 92 | 20:36:57 | `alkanes_simulate` | `2:15635` | `998` | DATA, 7 B |
+| 93 | 20:37:01 | `alkanes_simulate` | `2:15635` | `999` | DATA, 16 B |
+| 94 | 20:37:04 | `alkanes_simulate` | `2:15635` | `1002` | DATA, 271 B |
+| 95 | 20:37:09 | `metashrew_height` | — | — | 969896 |
+| 96 | 20:37:36 | `metashrew_height` | — | — | 969896 |
+| 97 | 20:37:40 | `alkanes_simulate` | `2:10672` | `99` | DATA, 4 B |
+| 98 | 20:37:43 | `alkanes_simulate` | `2:10672` | `101` | DATA, 16 B |
+| 99 | 20:37:47 | `alkanes_simulate` | `2:10672` | `1002, 4962` | DATA, 271 B |
+| 100 | 20:37:51 | `alkanes_simulate` | `2:10672` | `1002, 0` | DATA, 272 B |
+| 101 | 20:37:55 | `alkanes_simulate` | `2:10672` | `999, 4962` | REVERT: `Failed to parse message: Unknown opcode: 999` |
+| 102 | 20:37:58 | `alkanes_simulate` | `2:10672` | `1003, 4962` | REVERT: `Failed to parse message: Unknown opcode: 1003` |
+| 103 | 20:38:02 | `alkanes_simulate` | `2:10672` | `998` | DATA, 7 B |
+| 104 | 20:38:06 | `metashrew_height` | — | — | 969896 |
+| 105 | 20:38:18 | `metashrew_height` | — | — | 969896 |
+| 106 | 20:38:21 | `alkanes_simulate` | `2:15636` | `99` | DATA, 10 B |
+| 107 | 20:38:25 | `alkanes_simulate` | `2:15636` | `998` | DATA, 7 B |
+| 108 | 20:38:29 | `alkanes_simulate` | `2:15636` | `999` | DATA, 16 B |
+| 109 | 20:38:32 | `alkanes_simulate` | `2:15636` | `1002` | DATA, 277 B |
+| 110 | 20:38:37 | `metashrew_height` | — | — | 969896 |
+| 111 | 20:38:45 | `metashrew_height` | — | — | 969896 |
+| 112 | 20:38:48 | `alkanes_simulate` | `2:10672` | `99` | DATA, 4 B |
+| 113 | 20:38:51 | `alkanes_simulate` | `2:10672` | `1002, 4963` | DATA, 277 B |
+| 114 | 20:38:55 | `metashrew_height` | — | — | 969896 |

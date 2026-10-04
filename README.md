@@ -1,12 +1,12 @@
 # Orbital Metadata — a proposal for Alkanes collections
 
-**Draft v0.1 · public · MIT · a proposal, not a decree.**
+**Draft v0.2 · public · MIT · a proposal, not a decree.**
 
 > **Aries Labs did not create Alkanes, and this document does not speak for the Alkanes project.** It is one team's proposal, published so that others can improve it, adopt it, or argue with it.
 
 ## The problem
 
-Three live Alkanes collections answer the same attributes opcode with three incompatible shapes. An indexer, wallet or marketplace cannot consume "an Alkanes collection" today — it has to be taught each one by hand. This proposal defines **one metadata document, one attributes array and one membership oracle** that any Orbital can implement, so that a reader who has integrated one conforming collection has integrated all of them.
+Three live Alkanes collections answer the same attributes opcode with three different shapes: one flat object, and two arrays whose members disagree on keys and value types (measured, §1). An indexer, wallet or marketplace cannot consume "an Alkanes collection" today — it has to be taught each one by hand. This proposal defines **one metadata document, one attributes array and one membership oracle** that any Orbital can implement, so that a reader who has integrated one conforming collection has integrated all of them.
 
 ## What is here
 
@@ -15,7 +15,7 @@ Everything normative lives in [`STANDARD.md`](STANDARD.md):
 | § | What it covers |
 |---|---|
 | 0 | Why this exists — the incompatibility the proposal answers |
-| 1 | *(owed)* the measured survey of live collections, with its controls |
+| 1 | The survey — three live collections, measured on mainnet with their controls |
 | 2 | Principles — six rules the rest of the document follows from |
 | 3 | The parent views — the opcode surface, measured on mainnet |
 | 4 | The metadata document — the single object a reader consumes |
@@ -30,11 +30,8 @@ Everything normative lives in [`STANDARD.md`](STANDARD.md):
 
 ## Status, honestly
 
-- **Draft v0.1.** The shape is settled; the measurements are not all in the repository yet.
-- **§1 is deliberately absent rather than sketched.** Its numbers are measurements and belong here only when they are carried over from the report that took them.
-- **§3's opcode table is being re-derived byte-exact from the certified contract.** Until that lands, read it as descriptive. One row is already known to be wrong: `1001` (content type) is answered by each child, not by the parent.
-- **[`examples/`](examples/) is empty on purpose.** It will hold decoded view payloads read from a live contract; nothing in it is written by hand.
-- **The DRAFT label comes off (v1.0) when §1, §3 and `examples/` are measured from the collection's mainnet parent.** An independent reader — an indexer, wallet or marketplace Aries Labs does not run — consuming a conforming collection is the milestone after that.
+- **Draft v0.2.** §1, §3 and [`examples/`](examples/) are measured from Bitcoin mainnet. How, when and through which reader is written down in [`examples/MEASURED.md`](examples/MEASURED.md).
+- **The DRAFT label comes off (v1.0) when a collection conforms to the whole surface.** Aries Orbitals does not yet; §9 says where it falls short. An independent reader (an indexer, wallet or marketplace Aries Labs does not run) consuming a conforming collection is the milestone after that.
 
 ## How input works
 

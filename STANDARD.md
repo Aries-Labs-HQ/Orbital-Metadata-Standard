@@ -1,10 +1,46 @@
-# Orbital Metadata — a proposal for Alkanes collections (draft v0.1, Sep 21 2026)
+# Orbital Metadata — a proposal for Alkanes collections (draft v0.2)
 
-**Author: Aries Labs. Worked example: Aries Orbitals. Status: DRAFT v0.1, PUBLIC PROPOSAL — never a decree.** The document was written from the Aries Orbitals contract as shipped, which is therefore its reference implementation. The DRAFT label comes off when §1, §3 and `examples/` are measured from that collection's mainnet parent rather than typed. It states plainly what our own implementation does not yet do (§9).
+**Author: Aries Labs. Worked example: Aries Orbitals. Status: DRAFT v0.2, PUBLIC PROPOSAL — never a decree.** §1, §3 and `examples/` are measured from the collection's mainnet parent (see `examples/MEASURED.md`). The DRAFT label comes off at v1.0, when a collection conforms to the whole surface — Aries Orbitals does not yet (§9).
 
 ## 0 · Why this exists
 
-Three live Alkanes collections answer the same attributes opcode with three incompatible shapes. *(Section 1, the measured survey with its controls, is owed from the OZ-META-1 report and is not yet inlined here — the numbers must come from that report, never from memory.)* An indexer or marketplace cannot consume "an Alkanes collection" today; it consumes each one by hand. This proposal defines one document, one attributes array, and one membership oracle that any Orbital can implement and any reader can rely on.
+Three live Alkanes collections answer the same attributes opcode with three different shapes (§1): one flat object, and two arrays whose members disagree on keys and on value types. An indexer or marketplace cannot consume "an Alkanes collection" today; it consumes each one by hand. This proposal defines one document, one attributes array, and one membership oracle that any Orbital can implement and any reader can rely on.
+
+## 1 · The survey (measured)
+
+Three live mainnet collections, two pieces each. Every piece got a positive control first (its own `99 get-name`), then the attributes opcode, `1002` with no argument, which all three children answer.
+
+| collection | piece | control view | control answered | attributes opcode | shape | gas |
+|---|---|---|---|---|---|---|
+| Alkane Pandas (`2:614`) | `2:615` | 99 | `Alkane Pandas #0` | 1002 | flat JSON **object**; trait names are keys, no `trait_type`, every value a string | 18,313,053 |
+| Alkane Pandas | `2:616` | 99 | `Alkane Pandas #1` | 1002 | flat JSON **object**, same six keys | 18,313,043 |
+| Oyly (`2:10672`) | `2:15635` | 99 | `Oyly #4962` | 1002 | JSON **array** of `{trait_type, value}`; `Rank` is a **number** (`5384`), the rest strings | 13,545,255 |
+| Oyly | `2:15636` | 99 | `Oyly #4963` | 1002 | JSON **array** of `{trait_type, value}`; `Rank` a number (`6037`) | 13,545,455 |
+| Aries Orbitals (`2:98433`) | `2:98825` (#0007) | 99 | `Aries Orbital #0007` | 1002 | JSON **array** of `{id, trait_type, value}`; every value a string, including where it could be numeric | 187,998 |
+| Aries Orbitals | `2:102171` (#3000) | 99 | `Aries Orbital #3000` | 1002 | JSON **array** of `{id, trait_type, value}`, seven entries, all strings | 188,145 |
+
+Verbatim, one piece each:
+
+```
+2:615    {"background":"solid_green","body":"letter_blue","eyes":"white","head":"none","mouth":"smirk","species":"panda"}
+2:15635  [{"trait_type":"Background","value":"blue"},{"trait_type":"Base","value":"black"},{"trait_type":"Body","value":"none"},{"trait_type":"Eyes","value":"crazy"},{"trait_type":"Head","value":"cowboy"},{"trait_type":"Mouth","value":"chubby"},{"trait_type":"Rank","value":5384}]
+2:98825  [{"id":"palette","trait_type":"Palette","value":"P1 Phosphor Green"},{"id":"ram_render","trait_type":"Ram Render","value":"Wireframe"},{"id":"eyes","trait_type":"Eyes","value":"3D Shades"},{"id":"headwear","trait_type":"Headwear","value":"No Headwear"},{"id":"accessory","trait_type":"Accessory","value":"Toothpick"},{"id":"frame","trait_type":"Frame","value":"Frameless"},{"id":"signal","trait_type":"Signal","value":"Clear Signal"}]
+```
+
+**What the chain says.** One opcode, three shapes:
+- **Object vs array.** A reader that iterates an array finds nothing in the Pandas object, and a reader that enumerates keys misreads both arrays. No single parser handles all three without first knowing which collection it holds.
+- **The two arrays.** They are closer to each other. A lenient `trait_type`/`value` reader reads both. They still differ in an extra stable key (`id`) and in value types (Oyly's `Rank` is numeric; every Aries value is a string).
+- **The parents differ again on the same number.** On the Pandas parent, `1002(index)` returns the child's id (`2:615` at index 0, `2:616` at index 1). On the Oyly and Aries parents, it returns the attributes array for that index.
+- **Cost.** It spans two orders of magnitude: about 18.3M gas, 13.5M and 0.19M for the same opcode.
+
+**Membership.** Each piece was tied to its collection through the parent:
+- **Pandas:** the parent's `1002(0)` and `1002(1)` name `2:615` and `2:616`.
+- **Aries Orbitals:** the parent's `1010`/`1011` (§3).
+- **Oyly:** its parent answered no index→child view among those probed (`999` and `1003` are `Unknown opcode`). Its pieces are tied by their own `998` claim (`2:10672`) and `999` index (4962, 4963), plus the parent's `1002` at those indices, which is byte-identical to each child's answer. That is corroboration, not proof.
+
+*Conditions. Bitcoin mainnet. Reader: SUBFROST gateway (anonymous tier), the only Alkanes reader on mainnet, so no second reader cross-checked these answers. Each view was preceded by a positive control on the same contract in the same minute. Heights: 969,896 (Pandas, Oyly) and 969,800–969,801 (Aries Orbitals, the §3 measurement, reused). Date: 2026-10-04. The v0.1 survey (Sep 16) took its third subject from an earlier Aries Labs deployment, since closed and superseded. That subject is replaced here by the live collection, `2:98433`, which is also this document's worked example. Every call is listed in [`examples/MEASURED.md`](examples/MEASURED.md).*
+
+**What this table proves, and what it does not.** It proves that the shapes differ as read through this reader, at these heights, on these six pieces. It does not rank them.
 
 ## 2 · Principles
 
@@ -110,7 +146,6 @@ Each bullet stands on a row measured in §3, §7 or [`examples/`](examples/).
 - **Our own parent and child disagree on `1006`.** On the parent, `1006` is `paid-of(index)`: sats paid, `3000` for index 6. On the child, `1006` is `get-number`: `7` for #0007. One number means two things inside one collection. Never carry an opcode number from a parent to its children.
 - **The per-address cap is per scriptPubKey.** `1005` keys its record by scriptPubKey, so a wallet that rotates addresses is uncapped. Public copy says "3 per wallet address."
 - **`permanent_id` is defined here and not emitted.** The `1008` document carries twelve fields; `permanent_id` is not among them, and it is `null` in [`examples/metadata-document-0007.json`](examples/metadata-document-0007.json).
-- **Section 1's survey is not yet inlined.**
 
 ## 10 · The sibling collection
 
