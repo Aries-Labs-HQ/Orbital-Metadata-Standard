@@ -15,28 +15,36 @@ Three live Alkanes collections answer the same attributes opcode with three inco
 5. **Traits do not exist before the mint.** A piece's traits are seeded by the transaction that mints it; the contract refuses to describe an unminted index. Rarity cannot be enumerated in advance.
 6. **No dead weight.** A view that is derivable from another view, or a field that is single-valued forever, is not part of the surface.
 
-## 3 · The parent views (Aries Orbitals as shipped — re-derivation from the certified source owed)
+## 3 · The parent views (Aries Orbitals, measured)
 
-| opcode | name | returns | role |
-|---|---|---|---|
-| 99 | get-name | string | collection name — `Aries Orbitals` |
-| 100 | get-symbol | string | `ARIESORB` (ruled Sep 21; `ARIES` deliberately left free) |
-| 101 | get-total-supply | u128 | pieces issued |
-| 102 | get-cap | u128 | hard cap, immutable |
-| 1000 | get-data(index) | svg | the image, rendered in-contract |
-| 1002 | get-attributes(index) | json | the attributes array (§5) |
-| 1005 | minter-record(spk) | json | per-address count and cap — **the pre-flight** |
-| 1006 | paid-of(index) | u128 | sats paid to the treasury for this piece |
-| 1007 | supply | json | the supply surface (§6) |
-| 1008 | orbital(index) | json | **the metadata document** (§4) |
-| 1010 | instance-of(index) | json | index → child alkane id |
-| 1011 | index-of(block, tx) | json | child alkane id → index; **the membership oracle** |
-| 1012 | piece-of-txid(txid) | json | mint transaction → piece |
-| 1013 | standards | json | the machine-readable token model (§7) |
+The certified source dispatches **16** opcodes on the parent: two writes (`0`, `8`) and fourteen views. All sixteen were called on mainnet. Every view answered, and both writes refused in the contract's own words, so the dispatch table on chain is the source's.
 
-**Measured Sep 25 against the certified bytecode:** the parent answers **16** opcodes; this table listed 15 before the `1001` row was removed (content type is a **child** view, not a parent view), so at least two parent views are missing from it; the parent's `1000` takes an index and reverts without one. The table is replaced by the measured list in v0.2; until then it is descriptive.
+| opcode | name | args | measured answer at `2:98433` | gas |
+|---|---|---|---|---|
+| 0 | initialize | floor-sats, treasury-spk, auth-factory, orbital-factory | write, one-time. Refuses: `Aries Orbitals: already initialized` | — |
+| 8 | public-mint | — | write. A simulate carries no transaction, so it refuses: `Aries Orbitals: no minter output found in mint tx` | — |
+| 99 | get-name | — | `Aries Orbitals` | 39,743 |
+| 100 | get-symbol | — | `ARIESORB` | 38,555 |
+| 101 | get-total-supply | — | u128 LE: `3000` (pieces issued) | 48,960 |
+| 102 | get-cap | — | u128 LE: `3000` | 39,693 |
+| 1000 | get-data | index | the SVG, rendered in-contract (index 7: 5,078 B) | 3,568,461 |
+| 1002 | get-attributes | index | JSON array of seven `{id, trait_type, value}`, every value a string (§5) | 100,441 |
+| 1005 | minter-record | spk (length-prefixed bytes) | `{"minter", "minted", "cap", "remaining"}`, the pre-flight | 242,136 |
+| 1006 | paid-of | index | u128 LE: sats paid for that piece (index 6: `3000`) | 54,492 |
+| 1007 | supply | — | the supply surface (§6). The minimum donation is `mint.floor_sats` = `3000` | 125,928 |
+| 1008 | orbital | index | **the metadata document** (§4), 3,135 B at index 6 | 984,391 |
+| 1010 | instance-of | index | `{"index", "number", "instance": {"id", "block", "tx"}}` | 60,176 |
+| 1011 | index-of | block, tx | `{"instance", "member", "index", "number"}`, **the membership oracle** | 67,571 |
+| 1012 | piece-of-txid | txid (32 bytes, internal order) | `{"txid", "order": "internal", "index", "number", "instance"}` | 258,285 |
+| 1013 | standards | — | the machine-readable token model (§8) | 66,490 |
 
-**Removed by ruling, Sep 21:** 103, 104 (derived from 101/102), 1003 (a subset of 1008 with an empty `traits` field), 1004 (single-class histogram). An Orbital implementing this proposal should not carry views whose answers are derivable from others.
+**Measured absent.** `1001` (content type is a child view, §7), `103`, `104`, `1003`, `1004`, `1009`, `7`, `9`, `10` and `12` all refuse with `Unrecognized opcode`, even when four argument cells are supplied. A never-defined opcode (`4242`) refuses identically. Padding is a valid probe: `1007` with the same four extra cells answers byte-identically to `1007` with none.
+
+**How to read a refusal on this contract.** A view called with too few arguments refuses with the **same** text as an absent opcode. `1000` with no index, `1002` with no index and `0` with no arguments all answer `Unrecognized opcode` at zero gas. The pinned codegen routes a failed argument parse to the runtime's `fallback()`, so source and chain agree. A reader cannot tell "wrong arity" from "not implemented" by the text alone. Supply the arguments, or pad, before concluding that a view is absent.
+
+*Measured against `2:98433` at height 969,800–969,801 on 2026-10-04. Reader: SUBFROST gateway (anonymous tier), the only Alkanes reader on mainnet. Expected to transfer to any reader of the same protocol version. Every call and its control: [`examples/parent-2-98433.json`](examples/parent-2-98433.json); conditions: [`examples/MEASURED.md`](examples/MEASURED.md).*
+
+**Removed by ruling, Sep 21 (measured absent above):** 103 and 104 (derivable from 101/102), 1003 (a subset of 1008 with an empty `traits` field) and 1004 (a single-class histogram). An Orbital implementing this proposal should not carry views whose answers can be derived from other views.
 
 ## 4 · The metadata document — `orbital(index)` / child `orbital()`
 
@@ -56,6 +64,8 @@ Three live Alkanes collections answer the same attributes opcode with three inco
   "art_version": "v9h-3000"
 }
 ```
+
+*The block above shows the shape. The document as the chain returns it, for piece #0007, is [`examples/metadata-document-0007.json`](examples/metadata-document-0007.json).*
 
 - **`name`** — the title. Singular noun, `#` + zero-padded number; padding sorts correctly on every marketplace.
 - **`description`** — collection-level text, a compiled constant.
@@ -79,9 +89,13 @@ An array of `{ id, trait_type, value }`. `id` is the stable machine key; `trait_
   "instances": { "template": "4:910921", "created": 15 } }
 ```
 
+*The block above shows the shape. The live answer, with the mainnet template `4:333333`, is the `1007` row of [`examples/parent-2-98433.json`](examples/parent-2-98433.json).*
+
 ## 7 · The child views
 
 99 name (`Aries Orbital #0001`) · 100 symbol (`ARIESORB-0001`) · 101 total-supply (always 1) · 998 collection-identifier (a claim) · 999 index · 1000 data · 1001 content-type · 1002 attributes · 1006 number · **1008 orbital (delegates to the parent at its own index).** With 1008 the child is a complete document on its own.
+
+*Measured on #0007 (`2:98825`) and #3000 (`2:102171`): every view above answered as listed, `0 initialize` refused (`already initialized`), and an undefined opcode refused. The child's `1000`, `1002` and `1008` are byte-identical to the parent's `1008 image_data`, `1002` and `1008` at the same index. See [`examples/piece-0007.json`](examples/piece-0007.json) and [`examples/piece-3000.json`](examples/piece-3000.json).*
 
 ## 8 · `standards` — the machine-readable model
 
@@ -89,14 +103,17 @@ The contract describes its own token model: `piece_supply: 1`, `piece_divisible:
 
 ## 9 · What Aries Orbitals does not yet do (honesty section)
 
-- The minimum donation is readable (`supply.mint.floor_sats`, opcode 1007), but the parent has no zero-argument image view: `1000` requires an index, so an explorer that asks the parent for a collection image with no argument gets a revert. Children answer `1000` and `1001` normally. A collection-level image view is an open question for v0.2 (see proposals/).
-- The per-address cap is per scriptPubKey; a wallet rotating addresses is uncapped. Public copy says "3 per wallet address."
-- `permanent_id` is defined here and emitted by no contract yet.
-- Section 1's survey is not yet inlined.
+Each bullet stands on a row measured in §3, §7 or [`examples/`](examples/).
 
-## 10 · Aries Honorary (sibling collection, separate contract, no deadline) — ruled naming
+- **No zero-argument collection image view.** The minimum donation is readable (`1007`, `mint.floor_sats` = 3000). But the parent's `1000` requires an index, so an explorer that asks the parent for a collection image with no argument gets a revert. Children answer `1000` and `1001` normally. This is still open (proposal 0001).
+- **A missing argument reads as a missing opcode.** The parent answers `1000` and `1002` without an index with `Unrecognized opcode`, the same text an absent opcode returns (§3). The contract does not override the runtime's `fallback()`, so it never says "this view needs an index".
+- **Our own parent and child disagree on `1006`.** On the parent, `1006` is `paid-of(index)`: sats paid, `3000` for index 6. On the child, `1006` is `get-number`: `7` for #0007. One number means two things inside one collection. Never carry an opcode number from a parent to its children.
+- **The per-address cap is per scriptPubKey.** `1005` keys its record by scriptPubKey, so a wallet that rotates addresses is uncapped. Public copy says "3 per wallet address."
+- **`permanent_id` is defined here and not emitted.** The `1008` document carries twelve fields; `permanent_id` is not among them, and it is `null` in [`examples/metadata-document-0007.json`](examples/metadata-document-0007.json).
+- **Section 1's survey is not yet inlined.**
 
-- `name`: `Aries Honorary: <headpiece text>` — e.g. `Aries Honorary: ᛒᚱᚨᚷᛁ`.
-- `description` (operator text, verbatim and ruled final Sep 21): *Aries Honorary: ᛒᚱᚨᚷᛁ is one of 333 custom pieces designed by the top donors who believed in Alkanes builders plus all the OG's who made programmable assets on Bitcoin a reality. These Legendary 1/1's are the first of their kind, rendered in-contract on Bitcoin via Alkanes.* — per-piece, with the name substituted.
-- `symbol`: **`ARIESHON`** (operator-ruled Sep 21; "OG" stays reserved for the builder registry). Per-piece suffix format is the Honorary lane's to define.
-- Tickers overall: **`ARIESORB`** (public round) · **`ARIESHON`** (Honorary) · **`ARIES` is reserved, unassigned, for a possible future token.**
+## 10 · The sibling collection
+
+A separate 333-piece Aries Honorary collection follows. It is not described here.
+
+Tickers: **`ARIESORB`** is Aries Orbitals. **`ARIES` is reserved, unassigned.**

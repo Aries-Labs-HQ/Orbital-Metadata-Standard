@@ -2,7 +2,7 @@
 
 **Draft v0.1 · public · MIT · a proposal, not a decree.**
 
-> **Aries Labs did not create Alkanes. This is not an official Alkanes document.** It is one team's proposal, published so that others can improve it, adopt it, or argue with it.
+> **Aries Labs did not create Alkanes, and this document does not speak for the Alkanes project.** It is one team's proposal, published so that others can improve it, adopt it, or argue with it.
 
 ## The problem
 
@@ -17,16 +17,16 @@ Everything normative lives in [`STANDARD.md`](STANDARD.md):
 | 0 | Why this exists — the incompatibility the proposal answers |
 | 1 | *(owed)* the measured survey of live collections, with its controls |
 | 2 | Principles — six rules the rest of the document follows from |
-| 3 | The parent views — the opcode surface, what each returns and why |
+| 3 | The parent views — the opcode surface, measured on mainnet |
 | 4 | The metadata document — the single object a reader consumes |
 | 5 | The attributes array — stable machine keys beside display labels |
 | 6 | The supply surface — one view describing the collection's shape |
 | 7 | The child views — how a piece answers for itself without its parent |
 | 8 | `standards` — the contract's machine-readable account of its own token model |
 | 9 | Honesty section — what the worked example does *not* yet do |
-| 10 | Aries Honorary — the sibling collection's naming |
+| 10 | The sibling collection |
 
-**Worked example: Aries Orbitals**, Aries Labs' own collection. The document was written from that contract's shipped views, so it is the reference implementation.
+**Worked example: Aries Orbitals**, Aries Labs' own collection, parent `2:98433` on Bitcoin mainnet. 3,000 pieces. 3,000 offered in the public round — minted out. The document was written from that contract's shipped views, so it is the reference implementation.
 
 ## Status, honestly
 
