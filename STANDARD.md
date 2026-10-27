@@ -1,6 +1,6 @@
-# Orbital Metadata — a proposal for Alkanes collections (draft v0.2)
+# Orbital Metadata — a proposal for Alkanes collections (draft v0.2.1)
 
-**Author: Aries Labs. Worked example: Aries Orbitals. Status: DRAFT v0.2, PUBLIC PROPOSAL — never a decree.** §1, §3 and `examples/` are measured from the collection's mainnet parent (see `examples/MEASURED.md`). The DRAFT label comes off at v1.0, when a collection conforms to the whole surface — Aries Orbitals does not yet (§9).
+**Author: Aries Labs. Reference implementation: Aries Orbitals. Status: DRAFT v0.2.1, PUBLIC PROPOSAL — never a decree.** §1, §3, §7 and `examples/` are measured from Bitcoin mainnet, and v0.2.1 re-measured every row at block 973,316 (see `examples/MEASURED.md`). The DRAFT label comes off at v1.0, when a collection conforms to the whole surface and an independent reader consumes it — Aries Orbitals does not yet (§9, §11).
 
 ## 0 · Why this exists
 
@@ -29,16 +29,18 @@ Verbatim, one piece each:
 
 **What the chain says.** One opcode, three shapes:
 - **Object vs array.** A reader that iterates an array finds nothing in the Pandas object, and a reader that enumerates keys misreads both arrays. No single parser handles all three without first knowing which collection it holds.
-- **The two arrays.** They are closer to each other. A lenient `trait_type`/`value` reader reads both. They still differ in an extra stable key (`id`) and in value types (Oyly's `Rank` is numeric; every Aries value is a string).
+- **The two arrays.** They are closer to each other. A lenient `trait_type`/`value` reader reads both. They still differ in an extra stable key (`id`) and in value types (Oyly's `Rank` is numeric; every Aries value is a string). Of the three shapes, the only true incompatibility is object vs array.
 - **The parents differ again on the same number.** On the Pandas parent, `1002(index)` returns the child's id (`2:615` at index 0, `2:616` at index 1). On the Oyly and Aries parents, it returns the attributes array for that index.
 - **Cost.** It spans two orders of magnitude: about 18.3M gas, 13.5M and 0.19M for the same opcode.
 
 **Membership.** Each piece was tied to its collection through the parent:
 - **Pandas:** the parent's `1002(0)` and `1002(1)` name `2:615` and `2:616`.
 - **Aries Orbitals:** the parent's `1010`/`1011` (§3).
-- **Oyly:** its parent answered no index→child view among those probed (`999` and `1003` are `Unknown opcode`). Its pieces are tied by their own `998` claim (`2:10672`) and `999` index (4962, 4963), plus the parent's `1002` at those indices, which is byte-identical to each child's answer. That is corroboration, not proof.
+- **Oyly:** its parent answered no index→child or child→index view among those probed. `999`, `1001`, `1003`–`1008` and `1010`–`1013` all refuse `Unknown opcode`; `998` names the parent itself and `1000(index)` returns an image, and neither names a child. Its pieces are tied by their own `998` claim (`2:10672`) and `999` index (4962, 4963), plus the parent's `1002` at those indices, which is byte-identical to each child's answer. That is corroboration, not proof.
 
 *Conditions. Bitcoin mainnet. Reader: SUBFROST gateway (anonymous tier), the only Alkanes reader on mainnet, so no second reader cross-checked these answers. Each view was preceded by a positive control on the same contract in the same minute. Heights: 969,896 (Pandas, Oyly) and 969,800–969,801 (Aries Orbitals, the §3 measurement, reused). Date: 2026-10-04. The v0.1 survey (Sep 16) took its third subject from an earlier Aries Labs deployment, since closed and superseded. That subject is replaced here by the live collection, `2:98433`, which is also this document's worked example. Every call is listed in [`examples/MEASURED.md`](examples/MEASURED.md).*
+
+*Re-measured for v0.2.1 at block 973,316 on 2026-10-27, every call pinned to that block. All six controls answered. Every attributes answer, the Pandas parent's `1002(0)` and `1002(1)`, and the Oyly parent's `1002(4962)` and `1002(4963)` are byte-identical to the answers above, at identical gas. Conditions: `bitcoin-mainnet` · `SUBFROST-gateway-anonymous` · `pinned-block-973316` · `aries-orbitals-minted-out`.*
 
 **What this table proves, and what it does not.** It proves that the shapes differ as read through this reader, at these heights, on these six pieces. It does not rank them.
 
@@ -53,7 +55,7 @@ Verbatim, one piece each:
 
 ## 3 · The parent views (Aries Orbitals, measured)
 
-The certified source dispatches **16** opcodes on the parent: two writes (`0`, `8`) and fourteen views. All sixteen were called on mainnet. Every view answered, and both writes refused in the contract's own words, so the dispatch table on chain is the source's.
+The certified source dispatches **16** opcodes on the parent: two writes (`0`, `8`) and fourteen views. All sixteen were called on mainnet. Every view answered, and both writes refused in the contract's own words, so the dispatch table on chain is the source's. v0.2.1 called all sixteen again at block 973,316: the same answers byte for byte, the same refusal texts, the same gas.
 
 | opcode | name | args | measured answer at `2:98433` | gas |
 |---|---|---|---|---|
@@ -74,11 +76,13 @@ The certified source dispatches **16** opcodes on the parent: two writes (`0`, `
 | 1012 | piece-of-txid | txid (32 bytes, internal order) | `{"txid", "order": "internal", "index", "number", "instance"}` | 258,285 |
 | 1013 | standards | — | the machine-readable token model (§8) | 66,490 |
 
-**Measured absent.** `1001` (content type is a child view, §7), `103`, `104`, `1003`, `1004`, `1009`, `7`, `9`, `10` and `12` all refuse with `Unrecognized opcode`, even when four argument cells are supplied. A never-defined opcode (`4242`) refuses identically. Padding is a valid probe: `1007` with the same four extra cells answers byte-identically to `1007` with none.
+**Index and number.** `index` is zero-based; `number` is one-based and is the number in the piece's name, so index 861 is #0862 (`2:100000`). Every parent view that takes a piece takes its index. Every name and every refusal speaks the number: `1010(3000)` refuses `Aries Orbitals: #3001 is outside the collection (#0001-#3000)`, and `1002(1)` refused `Aries Orbitals: #0002 not minted` until #0002's mint block.
 
-**How to read a refusal on this contract.** A view called with too few arguments refuses with the **same** text as an absent opcode. `1000` with no index, `1002` with no index and `0` with no arguments all answer `Unrecognized opcode` at zero gas. The pinned codegen routes a failed argument parse to the runtime's `fallback()`, so source and chain agree. A reader cannot tell "wrong arity" from "not implemented" by the text alone. Supply the arguments, or pad, before concluding that a view is absent.
+**Measured absent.** `1001` (content type is a child view, §7), `998` and `999` (child views, §7), `103`, `104`, `1003`, `1004`, `1009`, `7`, `9`, `10` and `12` all refuse with `Unrecognized opcode`, even when four argument cells are supplied. A never-defined opcode (`4242`) refuses identically. Padding is a valid probe: `1007` with the same four extra cells answers byte-identically to `1007` with none.
 
-*Measured against `2:98433` at height 969,800–969,801 on 2026-10-04. Reader: SUBFROST gateway (anonymous tier), the only Alkanes reader on mainnet. Expected to transfer to any reader of the same protocol version. Every call and its control: [`examples/parent-2-98433.json`](examples/parent-2-98433.json); conditions: [`examples/MEASURED.md`](examples/MEASURED.md).*
+**How to read a refusal on this contract.** A view called with too few arguments refuses with the **same** text as an absent opcode. `1000`, `1002` and `1008` with no index, and `0` with no arguments, all answer `Unrecognized opcode` at zero gas. The pinned codegen routes a failed argument parse to the runtime's `fallback()`, so source and chain agree. A reader cannot tell "wrong arity" from "not implemented" by the text alone. Supply the arguments, or pad, before concluding that a view is absent.
+
+*Measured against `2:98433` at height 969,800–969,801 on 2026-10-04. Reader: SUBFROST gateway (anonymous tier), the only Alkanes reader on mainnet. Expected to transfer to any reader of the same protocol version. Every call and its control: [`examples/parent-2-98433.json`](examples/parent-2-98433.json); conditions: [`examples/MEASURED.md`](examples/MEASURED.md). Re-measured at block 973,316 on 2026-10-27, every call pinned to that block, beside children #0002 (`2:98728`) and #0862 (`2:100000`): the source ≠ chain diff is empty, and every answer, refusal text and gas figure is identical to the table. Conditions: `bitcoin-mainnet` · `SUBFROST-gateway-anonymous` · `pinned-block-973316` · `aries-orbitals-minted-out`.*
 
 **Removed by ruling, Sep 21 (measured absent above):** 103 and 104 (derivable from 101/102), 1003 (a subset of 1008 with an empty `traits` field) and 1004 (a single-class histogram). An Orbital implementing this proposal should not carry views whose answers can be derived from other views.
 
@@ -105,7 +109,7 @@ The certified source dispatches **16** opcodes on the parent: two writes (`0`, `
 
 - **`name`** — the title. Singular noun, `#` + zero-padded number; padding sorts correctly on every marketplace.
 - **`description`** — collection-level text, a compiled constant.
-- **`image_data`** — the raw SVG, byte-identical to `get-data` at the same index. This is the field the ERC-721 metadata convention already reserves for on-chain SVG; conformance and permanence in one field. There is no `image` URL, by design.
+- **`image_data`** — the raw SVG, byte-identical to `get-data` at the same index. This is the field the ERC-721 metadata convention already reserves for onchain SVG; conformance and permanence in one field. There is no `image` URL, by design.
 - **`origin`** — replaces `external_url`. Instead of pointing out to a server, the document points in to the chain: the block height and transaction that seeded the piece, and the seed itself.
 - **`permanent_id`** — *reserved, absent here.* For Orbitals whose content builds from Ordinals inscriptions, the inscription id(s) that compose the piece.
 - **`provenance`** — who minted it (as a script, never a name) and what was paid.
@@ -129,9 +133,27 @@ An array of `{ id, trait_type, value }`. `id` is the stable machine key; `trait_
 
 ## 7 · The child views
 
-99 name (`Aries Orbital #0001`) · 100 symbol (`ARIESORB-0001`) · 101 total-supply (always 1) · 998 collection-identifier (a claim) · 999 index · 1000 data · 1001 content-type · 1002 attributes · 1006 number · **1008 orbital (delegates to the parent at its own index).** With 1008 the child is a complete document on its own.
+The certified source dispatches **11** opcodes on each child: one write (`0`) and ten views. **1008 orbital delegates to the parent at the child's own index**, so with 1008 the child is a complete document on its own.
 
-*Measured on #0007 (`2:98825`) and #3000 (`2:102171`): every view above answered as listed, `0 initialize` refused (`already initialized`), and an undefined opcode refused. The child's `1000`, `1002` and `1008` are byte-identical to the parent's `1008 image_data`, `1002` and `1008` at the same index. See [`examples/piece-0007.json`](examples/piece-0007.json) and [`examples/piece-3000.json`](examples/piece-3000.json).*
+| opcode | name | measured answer at #0002 (`2:98728`) | at #0862 (`2:100000`) |
+|---|---|---|---|
+| 0 | initialize | write, one-time. Refuses: `Aries Orbitals: already initialized` | the same |
+| 99 | get-name | `Aries Orbital #0002` | `Aries Orbital #0862` |
+| 100 | get-symbol | `ARIESORB-0002` | `ARIESORB-0862` |
+| 101 | get-total-supply | u128 LE: `1` | `1` |
+| 998 | get-collection-identifier | the string `2:98433`, a claim (principle 3) | `2:98433` |
+| 999 | get-index | u128 LE: `1`, the zero-based index (§3) | `861` |
+| 1000 | get-data | the SVG, 4,751 B | 6,333 B |
+| 1001 | get-content-type | `image/svg+xml` | `image/svg+xml` |
+| 1002 | get-attributes | the seven-entry array (§5) | the same shape |
+| 1006 | get-number | u128 LE: `2`, the one-based number | `862` |
+| 1008 | orbital | the §4 document, 6,214 B | 7,841 B |
+
+On both children, and on #0007 (`2:98825`), `1000`, `1002` and `1008` are byte-identical to the parent's `1008 image_data`, `1002` and `1008` at the child's index, and the parent's `1010` and `1011` return the same index, number and id. Measured absent on both children, with four cells padded: `8`, `102`, `1005`, `1007` and `1010`–`1013`. A child cannot vouch for its own membership, by design (principle 3).
+
+*Measured on #0007 (`2:98825`) and #3000 (`2:102171`) at 969,800–969,801 on 2026-10-04 (see [`examples/piece-0007.json`](examples/piece-0007.json) and [`examples/piece-3000.json`](examples/piece-3000.json)). The table above and the #0007 rows were measured at block 973,316 on 2026-10-27, every call pinned to that block; the #0007 rows are byte-identical to the v0.2 file. Conditions: `bitcoin-mainnet` · `SUBFROST-gateway-anonymous` · `pinned-block-973316` · `aries-orbitals-minted-out`.*
+
+**Moving a piece.** A piece moves only under a protostone; a spend without one destroys the piece or carries it to an output the spender did not choose; neither can be undone. Nothing at the outpoint says so, since the piece sits on 546 sats of postage, and `1013` does not declare it (§9, proposal 0002).
 
 ## 8 · `standards` — the machine-readable model
 
@@ -142,13 +164,39 @@ The contract describes its own token model: `piece_supply: 1`, `piece_divisible:
 Each bullet stands on a row measured in §3, §7 or [`examples/`](examples/).
 
 - **No zero-argument collection image view.** The minimum donation is readable (`1007`, `mint.floor_sats` = 3000). But the parent's `1000` requires an index, so an explorer that asks the parent for a collection image with no argument gets a revert. Children answer `1000` and `1001` normally. This is still open (proposal 0001).
-- **A missing argument reads as a missing opcode.** The parent answers `1000` and `1002` without an index with `Unrecognized opcode`, the same text an absent opcode returns (§3). The contract does not override the runtime's `fallback()`, so it never says "this view needs an index".
+- **A missing argument reads as a missing opcode.** The parent answers `1000`, `1002` and `1008` without an index with `Unrecognized opcode`, the same text an absent opcode returns (§3). The contract does not override the runtime's `fallback()`, so it never says "this view needs an index".
 - **Our own parent and child disagree on `1006`.** On the parent, `1006` is `paid-of(index)`: sats paid, `3000` for index 6. On the child, `1006` is `get-number`: `7` for #0007. One number means two things inside one collection. Never carry an opcode number from a parent to its children.
 - **The per-address cap is per scriptPubKey.** `1005` keys its record by scriptPubKey, so a wallet that rotates addresses is uncapped. Public copy says "3 per wallet address."
 - **`permanent_id` is defined here and not emitted.** The `1008` document carries twelve fields; `permanent_id` is not among them, and it is `null` in [`examples/metadata-document-0007.json`](examples/metadata-document-0007.json).
+- **Two byte orders for one transaction id.** The document's `origin.txid` is in display order, the order explorers print. `1012 piece-of-txid` takes and returns internal order, and it answers a txid it does not hold with nulls rather than a refusal. A reader that passes #0007's `origin.txid` straight to `1012` is told `"index": null` for a real piece. Reverse the 32 bytes first.
+- **No transfer declaration.** `1013` says `transfer_hooks: false` and nothing about how a piece moves, so a wallet that reads the contract learns nothing of the protostone rule (§7). A deployed contract cannot add it; proposal 0002 carries it for this collection.
 
 ## 10 · The sibling collection
 
-A separate 333-piece Aries Honorary collection follows. It is not described here.
+Aries Honorary will be the second implementation.
 
-Tickers: **`ARIESORB`** is Aries Orbitals. **`ARIES` is reserved, unassigned.**
+Ticker: **`ARIESORB`** is Aries Orbitals.
+
+## 11 · Conformance
+
+What Aries Orbitals does today against each principle (§2) and each required view, from the measurements above. A second collection copies this table and fills in its own column.
+
+| | requirement | Aries Orbitals (`2:98433`) | measured by |
+|---|---|---|---|
+| 1 | The chain is the authority | ✓ image, attributes and provenance are contract views; no field of the `1008` document is a URL, and its SVG references nothing outside itself | `1008` on #0002, #0007, #0862, #3000 |
+| 2 | A piece is a complete document | ✓ child `1008` is byte-identical to the parent's `1008(index)` | #0002, #0007, #0862 (§7) |
+| 3 | Membership is proven by the parent | ✓ `1011` answers `member: true` for its children, and `member: false` for a foreign piece, for the parent itself and for the template | `1011`, six ids |
+| 4 | Stable trait keys | ✓ every attribute carries `id` | `1002` (§5) |
+| 5 | Traits do not exist before the mint | ✓ `1002(1)` refuses `#0002 not minted` at block 969,027 and answers at 969,028, #0002's mint block | pinned reads |
+| 6 | No dead weight | ✓ the views removed by ruling (`103`, `104`, `1003`, `1004`) are absent | padded probes (§3) |
+| | `orbital(index)`, child `orbital()` — `1008` | ✓ twelve fields; `permanent_id` not emitted (the art renders in-contract) | §4, §9 |
+| | attributes array — `1002` | ✓ | §5 |
+| | `supply` — `1007` | ✓ | §6 |
+| | `index-of` / `instance-of` — `1011` / `1010` | ✓ | §3 |
+| | `standards` — `1013` | ✓ token model; **gap:** no transfer declaration | §8, §9 |
+| | child views — `998`, `999`, `1000`, `1001`, `1002`, `1006`, `1008` | ✓ all answer | §7 |
+| | collection image with no argument | **gap:** `1000` needs an index (proposal 0001) | §9 |
+| | a refusal that says "needs an argument" | **gap:** it reads `Unrecognized opcode`, as an absent view does | §3, §9 |
+| | one opcode, one meaning, parent and child | **gap:** `1006` is paid-of on the parent and number on the child | §9 |
+
+*Measured 2026-10-27. Conditions: `bitcoin-mainnet` · `SUBFROST-gateway-anonymous` · `pinned-block-973316` (principle 5 at `pinned-block-969027` and `pinned-block-969028`) · `aries-orbitals-minted-out`.*

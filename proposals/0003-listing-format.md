@@ -1,7 +1,7 @@
 # 0003 — A shared listing format for Alkanes collectibles
 
 ## Problem
-A marketplace listing is a seller's signed partial transaction. Each venue invents its own envelope, so a listing made on one venue cannot be read, verified or filled by another, and a venue that is not Alkanes-aware can build a fill that destroys the piece or strands it. Holders should be able to list once and have any honest venue fill it; venues should be able to integrate a collection from its document and the chain alone.
+A marketplace listing is a seller's signed partial transaction. Each venue invents its own envelope, so a listing made on one venue cannot be read, verified or filled by another, and a venue that is not Alkanes-aware can build a fill that destroys the piece or carries it to an output the buyer did not choose. Holders should be able to list once and have any honest venue fill it; venues should be able to integrate a collection from its document and the chain alone.
 
 ## Change
 A JSON envelope:
@@ -21,4 +21,4 @@ Nothing on chain. Venues keep their own storage and fees. A venue that adopts th
 Verify, never trust: refuse envelopes whose PSBT has more than one input or output, whose signature does not verify, or whose outpoint fails the exact-one-piece check. Never broadcast a fill without the protostone.
 
 ## Status
-A reference construction is under test on regtest. Measurements will be attached to this proposal when they exist; until then it is a proposal with no implementation of record.
+A direction for the standard, not an announcement. An atomic-swap venue for Orbitals exists (Open Orbit), and the fill rules above match what such a venue must check: exactly one piece at the outpoint, a protostone carrying it to the buyer's own output, and no asset-bearing input elsewhere.
