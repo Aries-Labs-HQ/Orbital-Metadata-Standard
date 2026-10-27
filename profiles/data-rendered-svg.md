@@ -43,7 +43,7 @@ These are not requirements. Each states what Aries Orbitals does, as measured, a
 
 **The case against.** A renderer that cannot change cannot be repaired: a drawing defect found after the mint stays in every piece. Freezing may not be checkable from views alone, which would make this the one requirement a reader cannot check by reading the chain. And MUST 2 already exposes any change, because a redrawn piece fails the hash comparison.
 
-**Open question — weigh in: [issue #ISSUE_A](https://github.com/Aries-Labs-HQ/Orbital-Standard/issues/ISSUE_A).** Resolved into MUST or dropped after input and the second implementation.
+**Open question — weigh in: [issue #5](https://github.com/Aries-Labs-HQ/Orbital-Standard/issues/5).** Resolved into MUST or dropped after input and the second implementation.
 
 ### OPEN 2 — Bounds declared
 
@@ -60,7 +60,7 @@ No view of the collection declares a bound: the parent's `1007` and `1013` answe
 
 **The case against.** Fuel is per indexer build, so a fuel figure written into a deployed contract goes stale when the indexer changes, and the contract cannot correct it. Size can be measured by any reader in one pass over the collection. A declared number that the chain can contradict sits awkwardly beside the core's first principle, that the chain is the authority.
 
-**Open question — weigh in: [issue #ISSUE_B](https://github.com/Aries-Labs-HQ/Orbital-Standard/issues/ISSUE_B).** Resolved into MUST or dropped after input and the second implementation.
+**Open question — weigh in: [issue #6](https://github.com/Aries-Labs-HQ/Orbital-Standard/issues/6).** Resolved into MUST or dropped after input and the second implementation.
 
 ## Conformance
 

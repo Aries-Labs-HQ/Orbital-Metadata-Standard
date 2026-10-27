@@ -35,7 +35,7 @@ Three live Alkanes collections answer the same attributes opcode with three diff
 
 ## How input works
 
-- **Weigh in on the two open questions:** [#ISSUE_A — freeze the renderer at deploy?](https://github.com/Aries-Labs-HQ/Orbital-Standard/issues/ISSUE_A) and [#ISSUE_B — declare SVG size and image-view fuel bounds?](https://github.com/Aries-Labs-HQ/Orbital-Standard/issues/ISSUE_B)
+- **Weigh in on the two open questions:** [#5 — freeze the renderer at deploy?](https://github.com/Aries-Labs-HQ/Orbital-Standard/issues/5) and [#6 — declare SVG size and image-view fuel bounds?](https://github.com/Aries-Labs-HQ/Orbital-Standard/issues/6)
 - **Open an issue** for any other question, disagreement, or hole. Every issue gets an answer.
 - **Send a pull request** for a change to the text. Small, one idea per PR. A new profile arrives as a PR with a measured implementation ([`profiles/`](profiles/)).
 - **Propose something larger** as a file in [`proposals/`](proposals/) — a short document with the problem, the change, and what it breaks. Discussion happens on the PR.
