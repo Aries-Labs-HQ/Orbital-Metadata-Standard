@@ -1,0 +1,3 @@
+# Profile — Ordinals-backed Orbitals (placeholder)
+
+**Status: placeholder.** An Ordinals-backed Orbital is an alkane whose image is not drawn by the contract but composed from one or more Ordinals inscriptions; the contract names them, and the core's `permanent_id` field (STANDARD §4) is where it would name them. To be a profile, this kind would have to guarantee at least that every inscription a piece names exists, is resolvable from the chain alone, and is the same inscription at every height after the piece's mint, and it would have to say what a reader does when it cannot fetch one. This profile is unwritten until a collection implements it and it is measured; propose it by PR.

@@ -2,6 +2,19 @@
 
 All accepted and declined changes, with reasons. Newest first.
 
+## v0.3.0 — core + profiles; Profile 1 Data-Rendered SVG measured 2026-10-27 at block 973,327
+The repository is renamed `Orbital-Standard`. It now holds a core every Orbital can conform to, plus named profiles, one per kind of Orbital. The DRAFT label stays.
+- **Layout.** `STANDARD.md` is the core. `profiles/` holds what each kind guarantees about its image: `profiles/README.md` says what a profile is and how one is proposed (by PR, with a measured implementation). Reason: Orbitals are made in more than one way, and the image rules of one kind are not the rules of another.
+- **Profile 1 — Data-Rendered SVG Orbitals**, written from Aries Orbitals and measured on 30 pieces at block 973,327 (SUBFROST gateway, anonymous tier, every call pinned to that block):
+  - **MUST 1, Self-contained:** a byte scan. 30 of 30 pass; the same run's planted control (#0862 with an injected `<image href="https://…">`) fails.
+  - **MUST 2, Deterministic per piece:** #0002, #0007 and #0862 are byte-identical at 973,227 and 973,327, in image and attributes; #0002's image is also identical at its mint block 969,028.
+  - **OPEN 1, Renderer frozen at deploy** and **OPEN 2, Bounds declared:** each states what Aries Orbitals does, as measured, and the case each way, and links its own issue. They are resolved into MUST or dropped after input and the second implementation.
+- **Placeholders:** Ordinals-backed and Static onchain bytes. Each is unwritten until a collection implements it and it is measured.
+- **Core edits:** the image's content type is now per profile (§4, §7). §11 is split into the core table and a pointer to each profile's table. The status line's v1.0 gate now reads "the whole core and one profile".
+- **Reader sentence (§1, §3):** "the only Alkanes reader on mainnet" becomes "the SUBFROST gateway is the primary mainnet reader and the broadcast route; other indexes exist". Reason: other indexes exist; the old sentence claimed more than was measured.
+- **Proposal 0002:** "on the order of a hundred pieces … moved … without the holder choosing" becomes the measured form: pieces were carried into later mint transactions as ordinary coin inputs, and the protostone's pointer took the piece along. The parent's `1013` (`mint_returns`) states that the mint forwards any alkanes in its inputs. Reason: the count was never measured, and intent cannot be read from the chain.
+- **Copy:** measurement dates are removed from `STANDARD.md`, and heights carry the conditions. The README is reframed around the core and profiles and links the two open questions. `examples/` is byte-identical.
+
 ## v0.2.1 — accuracy pass, measured 2026-10-27 at block 973,316
 Every claim was measured against the live parent `2:98433`, its children and the Aries build, and the document moved to the chain wherever they differed. The DRAFT label stays.
 - **Every row re-read**, each call pinned to block 973,316 through the SUBFROST gateway (anonymous tier), with a positive control on every target:

@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""secret-scan.py - the pre-commit secret gate for Orbital-Metadata-Standard.
+"""secret-scan.py - the pre-commit secret gate for Orbital-Standard.
 
 This is a documentation repository. Nothing in it should ever carry a
 credential, a private address, or a real filesystem path, so the gate is

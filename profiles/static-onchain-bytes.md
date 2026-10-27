@@ -1,0 +1,3 @@
+# Profile — Static onchain bytes (placeholder)
+
+**Status: placeholder.** A static-bytes Orbital stores its image as fixed bytes in the contract or in the transaction that created it, and its image view returns those bytes unchanged; nothing is computed at view time. To be a profile, this kind would have to guarantee at least that the bytes are complete on their own, that the content type is declared by the contract, and that the bytes a reader gets are the bytes that were written at deploy or mint. This profile is unwritten until a collection implements it and it is measured; propose it by PR.
