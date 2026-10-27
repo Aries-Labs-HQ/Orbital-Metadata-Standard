@@ -1,8 +1,10 @@
 # Orbital Metadata — a proposal for Alkanes collections
 
-**Draft v0.2 · public · MIT · a proposal, not a decree.**
+**Draft v0.2.1 · public · MIT · a proposal, not a decree.**
 
 > **Aries Labs did not create Alkanes, and this document does not speak for the Alkanes project.** It is one team's proposal, published so that others can improve it, adopt it, or argue with it.
+
+This proposal aims at the highest standard for NFTs on Bitcoin. The chain is the authority: image, attributes and provenance are read from the contract, never from a server. A piece is a complete document: the alkane a holder holds answers for itself. Membership is proven by the parent, never claimed by the child. Trait keys are stable: a machine `id` sits beside every display label. Aries Orbitals is the measured reference implementation; every claim made about it here was read from Bitcoin mainnet, and its gaps are listed (§9, §11). Aries Honorary will be the second implementation.
 
 ## The problem
 
@@ -24,14 +26,15 @@ Everything normative lives in [`STANDARD.md`](STANDARD.md):
 | 7 | The child views — how a piece answers for itself without its parent |
 | 8 | `standards` — the contract's machine-readable account of its own token model |
 | 9 | Honesty section — what the worked example does *not* yet do |
-| 10 | The sibling collection |
+| 10 | Aries Honorary — the second implementation |
+| 11 | Conformance — Aries Orbitals against every principle and required view; the table the next collection fills in |
 
-**Worked example: Aries Orbitals**, Aries Labs' own collection, parent `2:98433` on Bitcoin mainnet. 3,000 pieces. 3,000 offered in the public round — minted out. The document was written from that contract's shipped views, so it is the reference implementation.
+**Reference implementation: Aries Orbitals**, Aries Labs' own collection: parent `2:98433` on Bitcoin mainnet, deployed at block 968,677, symbol `ARIESORB`. 3,000 pieces. 3,000 offered in the public round — minted out. Each piece is its own supply-1 alkane, created from the template `4:333333` in the transaction that minted it. The document was written from that contract's shipped views and is re-measured against it; where the two disagree, the document moves to the chain.
 
 ## Status, honestly
 
-- **Draft v0.2.** §1, §3 and [`examples/`](examples/) are measured from Bitcoin mainnet. How, when and through which reader is written down in [`examples/MEASURED.md`](examples/MEASURED.md).
-- **The DRAFT label comes off (v1.0) when a collection conforms to the whole surface.** Aries Orbitals does not yet; §9 says where it falls short. An independent reader (an indexer, wallet or marketplace Aries Labs does not run) consuming a conforming collection is the milestone after that.
+- **Draft v0.2.1.** §1, §3, §7 and [`examples/`](examples/) are measured from Bitcoin mainnet. v0.2.1 re-measured every row at block 973,316, and every row matched. How, when and through which reader is written down in [`examples/MEASURED.md`](examples/MEASURED.md).
+- **The DRAFT label comes off (v1.0) when a collection conforms to the whole surface and an independent reader consumes it.** Aries Orbitals does not yet; §9 and §11 say where it falls short. An independent reader is an indexer, wallet or marketplace that Aries Labs does not run.
 
 ## How input works
 
@@ -40,6 +43,7 @@ Everything normative lives in [`STANDARD.md`](STANDARD.md):
 - **Propose something larger** as a file in [`proposals/`](proposals/) — a short document with the problem, the change, and what it breaks. Discussion happens on the PR.
 - **Decisions are logged.** Every accepted or declined change goes in [`CHANGELOG.md`](CHANGELOG.md) with its reason, so the record is the rationale, not just the diff.
 - Aries Labs edits the document. That is the current arrangement, not a claim of authority — if other teams want to co-edit, open an issue and say so.
+- **Talk to us.** Reply on X ([x.com/AriesAlkanes](https://x.com/AriesAlkanes)), or join the builders group on Telegram: https://t.me/+Ld4JmrPXPNI5ZDEx
 
 ## For readers (indexers, wallets, marketplaces)
 
@@ -47,7 +51,7 @@ Read §4 and §7. A conforming piece answers `orbital()` on its own; a conformin
 
 ## For collection authors
 
-Read §2 first. If your contract renders in-chain, §4's `image_data` is the field; if it composes from inscriptions, `permanent_id` is reserved for you (§4). Ship the seven-field document, the stable-keyed attributes array, and the membership oracle, and every reader that consumes this proposal consumes your collection.
+Read §2 first. If your contract renders onchain, §4's `image_data` is the field; if it composes from inscriptions, `permanent_id` is reserved for you (§4). Ship the §4 document, the stable-keyed attributes array and the membership oracle, then fill in §11's table for your collection, and every reader that consumes this proposal consumes your collection.
 
 ## Contributing
 
